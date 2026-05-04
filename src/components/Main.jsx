@@ -7,6 +7,23 @@ export default function Main(){
         bottomText:"Walk into Mordor",
         imageUrl:"http://i.imgflip.com/1bij.jpg"
     })
+    const [arrMemes, setArrMemes] = React.useState([])
+
+    React.useEffect(() => {
+        fetch("https://api.imgflip.com/get_memes")
+            .then(res => res.json())
+            .then(data => setArrMemes(data.data.memes))
+            .catch((error) => console.log(error))
+    }, [])
+
+    function rndMemeGenerator(){
+        const memeImg = Math.floor(Math.random() * arrMemes.length)
+        const newMemeUrl = arrMemes[memeImg].url
+        setMeme(prevMeme => ({
+            ...prevMeme, 
+            imageUrl: newMemeUrl
+        }))
+    }
 
     function handleChange(event){
         const {value, name} = event.currentTarget
@@ -37,7 +54,7 @@ export default function Main(){
                         value={meme.bottomText}
                     />
                 </label>
-                <button>Get a new meme image 🖼</button>
+                <button onClick={rndMemeGenerator}>Get a new meme image 🖼</button>
             </div>
             <div className="meme">
                 <img src={meme.imageUrl} />
